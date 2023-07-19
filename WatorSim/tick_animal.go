@@ -1,6 +1,8 @@
 package WatorSim
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 func adjacent(x, y, direction int) coordinate {
 	switch direction {
@@ -55,7 +57,7 @@ func findEmptyAdjacent(x, y int) (int, int, int) {
 	return 0, 0, 0
 }
 
-func moveAnimal(board [][]*creature, x int, y int) {
+func tickAnimal(board [][]*creature, x int, y int) {
 	if board[x][y] == nil {
 		return
 	}
@@ -73,7 +75,20 @@ func moveAnimal(board [][]*creature, x int, y int) {
 	}
 
 	board[newX][newY] = board[x][y]
-	board[x][y] = nil
+
+	if board[newX][newY].species == FISH {
+		if board[newX][newY].age == *breedFish {
+			board[x][y] = createFish()
+		} else {
+			board[x][y] = nil
+		}
+	} else { // the creature is a shark
+		if board[newX][newY].age == *breedFish {
+			board[x][y] = createShark()
+		} else {
+			board[x][y] = nil
+		}
+	}
 
 	if status == 2 {
 		board[newX][newY].starve = *starve
