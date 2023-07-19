@@ -1,5 +1,7 @@
 package WatorSim
 
+// constants
+
 const (
 	NORTH = iota
 	SOUTH
@@ -11,6 +13,20 @@ const (
 	FISH = iota
 	SHARK
 )
+
+// flags
+
+var (
+	InitFishCount   int
+	InitSharksCount int
+	BreedFish       int
+	BreedSharks     int
+	Starve          int
+	Width           int
+	Height          int
+)
+
+// types
 
 type Game struct{}
 

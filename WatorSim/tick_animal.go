@@ -9,21 +9,21 @@ func adjacent(x, y, direction int) coordinate {
 	case NORTH:
 		return coordinate{
 			x: x,
-			y: (y - 1 + *height) % *height,
+			y: (y - 1 + Height) % Height,
 		}
 	case SOUTH:
 		return coordinate{
 			x: x,
-			y: (y + 1) % *height,
+			y: (y + 1) % Height,
 		}
 	case EAST:
 		return coordinate{
-			x: (x + 1) % *width,
+			x: (x + 1) % Width,
 			y: y,
 		}
 	default: // WEST
 		return coordinate{
-			x: (x - 1 + *width) % *width,
+			x: (x - 1 + Width) % Width,
 			y: y,
 		}
 	}
@@ -77,13 +77,13 @@ func tickAnimal(board [][]*creature, x int, y int) {
 	board[newX][newY] = board[x][y]
 
 	if board[newX][newY].species == FISH {
-		if board[newX][newY].age == *breedFish {
+		if board[newX][newY].age == BreedFish {
 			board[x][y] = createFish()
 		} else {
 			board[x][y] = nil
 		}
 	} else { // the creature is a shark
-		if board[newX][newY].age == *breedFish {
+		if board[newX][newY].age == BreedSharks {
 			board[x][y] = createShark()
 		} else {
 			board[x][y] = nil
@@ -91,6 +91,6 @@ func tickAnimal(board [][]*creature, x int, y int) {
 	}
 
 	if status == 2 {
-		board[newX][newY].starve = *starve
+		board[newX][newY].starve = Starve
 	}
 }

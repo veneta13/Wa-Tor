@@ -6,19 +6,19 @@ import (
 )
 
 func initBoard() [][]*creature {
-	var board = make([][]*creature, *width)
+	var board = make([][]*creature, Width)
 	for i := range board {
-		board[i] = make([]*creature, *height)
+		board[i] = make([]*creature, Height)
 	}
 
 	// create a new pseudorandom number generator
 	prng := rand.New(rand.NewSource(time.Now().UnixNano()))
 
-	for i := 0; i < *nFish; i++ {
+	for i := 0; i < InitFishCount; i++ {
 		var x, y int
 		for {
-			x = prng.Intn(*width - 1)
-			y = prng.Intn(*height - 1)
+			x = prng.Intn(Width - 1)
+			y = prng.Intn(Height - 1)
 
 			if board[x][y] == nil {
 				break
@@ -28,11 +28,11 @@ func initBoard() [][]*creature {
 		board[x][y] = createFish()
 	}
 
-	for i := 0; i < *nSharks; i++ {
+	for i := 0; i < InitSharksCount; i++ {
 		var x, y int
 		for {
-			x = prng.Intn(*width - 1)
-			y = prng.Intn(*height - 1)
+			x = prng.Intn(Width - 1)
+			y = prng.Intn(Height - 1)
 
 			if board[x][y] == nil {
 				break

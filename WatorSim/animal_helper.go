@@ -7,7 +7,7 @@ import (
 
 func createFish() *creature {
 	return &creature{
-		age:     rand.Intn(*breedFish),
+		age:     rand.Intn(BreedFish),
 		species: FISH,
 		starve:  int(math.Inf(1)),
 	}
@@ -15,8 +15,8 @@ func createFish() *creature {
 
 func createShark() *creature {
 	return &creature{
-		age:     rand.Intn(*breedShark),
+		age:     rand.Intn(BreedSharks),
 		species: SHARK,
-		starve:  *starve,
+		starve:  Starve,
 	}
 }
