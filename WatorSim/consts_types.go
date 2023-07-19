@@ -20,6 +20,6 @@ type coordinate struct {
 
 type creature struct {
 	age     int
-	health  int
 	species int
+	starve  int
 }

@@ -1,6 +1,7 @@
 package WatorSim
 
 import (
+	"math"
 	"math/rand"
 	"time"
 )
@@ -28,6 +29,7 @@ func initBoard() [][]*creature {
 		board[x][y] = &creature{
 			age:     rand.Intn(*fBreed),
 			species: FISH,
+			starve:  int(math.Inf(1)),
 		}
 	}
 
@@ -45,7 +47,7 @@ func initBoard() [][]*creature {
 		board[x][y] = &creature{
 			age:     rand.Intn(*sBreed),
 			species: SHARK,
-			health:  *starve,
+			starve:  *starve,
 		}
 	}
 
