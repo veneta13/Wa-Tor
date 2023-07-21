@@ -29,7 +29,7 @@ func adjacent(x, y, direction int) coordinate {
 	}
 }
 
-func findEmptyAdjacent(x, y int) (int, int, int) {
+func findEmptyAdjacent(board [][]*creature, x, y int) (int, int, int) {
 	adjacentCoords := []coordinate{
 		adjacent(x, y, NORTH),
 		adjacent(x, y, SOUTH),
@@ -68,7 +68,7 @@ func tickAnimal(board [][]*creature, x int, y int) {
 		return
 	}
 
-	status, newX, newY := findEmptyAdjacent(x, y)
+	status, newX, newY := findEmptyAdjacent(board, x, y)
 
 	if status == 0 {
 		return
