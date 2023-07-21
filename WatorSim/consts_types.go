@@ -24,6 +24,7 @@ var (
 	Starve          int
 	Width           int
 	Height          int
+	ThreadCount     int
 )
 
 // types
@@ -38,4 +39,12 @@ type creature struct {
 	age     int
 	species int
 	starve  int
+}
+
+type submatrix struct {
+	fromX      int
+	toX        int
+	fromY      int
+	toY        int
+	typeIsEven bool
 }
