@@ -62,6 +62,7 @@ func tickAnimal(board [][]*creature, x int, y int) {
 		return
 	}
 
+	board[x][y].age++
 	board[x][y].starve--
 	if board[x][y].starve <= 0 {
 		board[x][y] = nil
