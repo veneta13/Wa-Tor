@@ -14,7 +14,7 @@ func init() {
 	flag.IntVar(&WatorSim.Width, "w", 500, "Width of the board")
 	flag.IntVar(&WatorSim.Height, "h", 500, "Height of the board")
 	flag.IntVar(&WatorSim.ThreadCount, "t", 8, "Thread count")
-	flag.IntVar(&WatorSim.MaxChronon, "mch", 200, "Max chronons to run the simulation for")
+	flag.IntVar(&WatorSim.MaxChronon, "mch", 1000, "Max chronons to run the simulation for")
 
 	flag.Parse()
 }
