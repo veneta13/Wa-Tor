@@ -1,16 +1,21 @@
 package WatorSim
 
 import (
+	"image"
 	"math"
+	"sync"
 )
 
-func checkboardPartition() []submatrix {
+var waitGroup sync.WaitGroup
+
+func checkboardPartition() ([]submatrix, []submatrix) {
 	partitionCount := int(math.Sqrt(float64(2 * ThreadCount)))
 	if partitionCount%2 == 1 {
 		partitionCount++
 	}
 
-	partitions := make([]submatrix, 2*ThreadCount)
+	evenPartitions := make([]submatrix, ThreadCount)
+	oddPartitions := make([]submatrix, ThreadCount)
 
 	partSizeW := Width / partitionCount
 	partRemW := Width % partitionCount
@@ -31,12 +36,22 @@ func checkboardPartition() []submatrix {
 				toY++
 			}
 
-			partitions[i*partitionCount+j] = submatrix{
-				fromX:      fromX,
-				toX:        toX,
-				fromY:      fromY,
-				toY:        toY,
-				typeIsEven: i%2 == j%2,
+			if i%2 == j%2 {
+				evenPartitions[(i*partitionCount+j)/2] = submatrix{
+					fromX:      fromX,
+					toX:        toX,
+					fromY:      fromY,
+					toY:        toY,
+					typeIsEven: true,
+				}
+			} else {
+				oddPartitions[(i*partitionCount+j)/2] = submatrix{
+					fromX:      fromX,
+					toX:        toX,
+					fromY:      fromY,
+					toY:        toY,
+					typeIsEven: false,
+				}
 			}
 
 			fromY = toY + 1
@@ -45,5 +60,51 @@ func checkboardPartition() []submatrix {
 		fromX = toX + 1
 	}
 
-	return partitions
+	return evenPartitions, oddPartitions
+}
+
+func tickCheckboard(submatrixChan chan submatrix, board [][]*creature) {
+	defer waitGroup.Done()
+
+	submatrix := <-submatrixChan
+	for x := submatrix.fromX; x <= submatrix.toX; x++ {
+		for y := submatrix.fromY; y <= submatrix.toY; y++ {
+			tickAnimal(board, x, y)
+		}
+	}
+}
+
+func runHalf(board [][]*creature, partitions []submatrix) {
+	submatrixChan := make(chan submatrix, ThreadCount)
+
+	for i := 0; i < ThreadCount; i++ {
+		waitGroup.Add(1)
+		go tickCheckboard(submatrixChan, board)
+	}
+
+	for _, item := range partitions {
+		submatrixChan <- item
+	}
+
+	close(submatrixChan)
+
+	waitGroup.Wait()
+}
+
+func runCheckboard(board [][]*creature) {
+	evenPartitions, oddPartitions := checkboardPartition()
+	var images []*image.Paletted
+
+	for i := 0; i < MaxChronon; i++ {
+		runHalf(board, evenPartitions)
+		runHalf(board, oddPartitions)
+		images = tickImage(images, board)
+	}
+
+	createAnimation(images, "image.gif")
+}
+
+func CreateAndRunCheckboard() {
+	board := initBoard()
+	runCheckboard(board)
 }
