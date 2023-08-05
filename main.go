@@ -3,6 +3,8 @@ package main
 import (
 	"Wa-Tor/WatorSim"
 	"flag"
+	"fmt"
+	"time"
 )
 
 func init() {
@@ -13,7 +15,7 @@ func init() {
 	flag.IntVar(&WatorSim.Starve, "s", 50, "Chronons until starvation")
 	flag.IntVar(&WatorSim.Width, "w", 500, "Width of the board")
 	flag.IntVar(&WatorSim.Height, "h", 500, "Height of the board")
-	flag.IntVar(&WatorSim.ThreadCount, "t", 8, "Thread count")
+	flag.IntVar(&WatorSim.ThreadCount, "t", 1, "Thread count")
 	flag.IntVar(&WatorSim.MaxChronon, "mch", 1000, "Max chronons to run the simulation for")
 
 	flag.Parse()
@@ -21,5 +23,10 @@ func init() {
 
 func main() {
 	checkParams()
+
+	startTime := time.Now()
 	WatorSim.CreateAndRunCheckboard()
+
+	elapsed := time.Since(startTime)
+	fmt.Printf("Total execution time: %s\n", elapsed)
 }

@@ -14,8 +14,8 @@ func checkboardPartition() ([]submatrix, []submatrix) {
 		partitionCount++
 	}
 
-	evenPartitions := make([]submatrix, ThreadCount)
-	oddPartitions := make([]submatrix, ThreadCount)
+	var evenPartitions []submatrix
+	var oddPartitions []submatrix
 
 	partSizeW := Width / partitionCount
 	partRemW := Width % partitionCount
@@ -36,22 +36,22 @@ func checkboardPartition() ([]submatrix, []submatrix) {
 				toY++
 			}
 
-			if i%2 == j%2 {
-				evenPartitions[(i*partitionCount+j)/2] = submatrix{
+			if (i+j)%2 == 0 {
+				evenPartitions = append(evenPartitions, submatrix{
 					fromX:      fromX,
 					toX:        toX,
 					fromY:      fromY,
 					toY:        toY,
 					typeIsEven: true,
-				}
+				})
 			} else {
-				oddPartitions[(i*partitionCount+j)/2] = submatrix{
+				oddPartitions = append(oddPartitions, submatrix{
 					fromX:      fromX,
 					toX:        toX,
 					fromY:      fromY,
 					toY:        toY,
 					typeIsEven: false,
-				}
+				})
 			}
 
 			fromY = toY + 1
@@ -66,10 +66,11 @@ func checkboardPartition() ([]submatrix, []submatrix) {
 func tickCheckboard(submatrixChan chan submatrix, board [][]*creature) {
 	defer waitGroup.Done()
 
-	submatrix := <-submatrixChan
-	for x := submatrix.fromX; x <= submatrix.toX; x++ {
-		for y := submatrix.fromY; y <= submatrix.toY; y++ {
-			tickAnimal(board, x, y)
+	for submatrix := range submatrixChan {
+		for x := submatrix.fromX; x <= submatrix.toX; x++ {
+			for y := submatrix.fromY; y <= submatrix.toY; y++ {
+				tickAnimal(board, x, y)
+			}
 		}
 	}
 }
