@@ -1,5 +1,7 @@
 package WatorSim
 
+import "image/color"
+
 // constants
 
 const (
@@ -25,6 +27,7 @@ var (
 	Width           int
 	Height          int
 	ThreadCount     int
+	MaxChronon      int
 )
 
 // types
@@ -48,3 +51,8 @@ type submatrix struct {
 	toY        int
 	typeIsEven bool
 }
+
+// params
+var fishColor = color.RGBA{R: 221, G: 233, B: 9, A: 1}
+var sharkColor = color.RGBA{R: 231, G: 1, B: 39, A: 1}
+var waterColor = color.RGBA{R: 37, G: 87, B: 218, A: 1}
