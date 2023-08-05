@@ -1,6 +1,7 @@
 package WatorSim
 
 import (
+	"math"
 	"math/rand"
 )
 
@@ -9,21 +10,21 @@ func adjacent(x, y, direction int) coordinate {
 	case NORTH:
 		return coordinate{
 			x: x,
-			y: (y - 1 + Height) % Height,
+			y: int(math.Min(float64(y+1), float64(Height-1))),
 		}
 	case SOUTH:
 		return coordinate{
 			x: x,
-			y: (y + 1) % Height,
+			y: int(math.Max(float64(y-1), 0.0)),
 		}
 	case EAST:
 		return coordinate{
-			x: (x + 1) % Width,
+			x: int(math.Min(float64(x+1), float64(Width-1))),
 			y: y,
 		}
 	default: // WEST
 		return coordinate{
-			x: (x - 1 + Width) % Width,
+			x: int(math.Max(float64(x-1), 0.0)),
 			y: y,
 		}
 	}
@@ -45,13 +46,15 @@ func findEmptyAdjacent(board [][]*creature, x, y int) (int, int, int) {
 	)
 
 	for _, tryCoord := range adjacentCoords {
-		if board[tryCoord.x][tryCoord.y] == nil {
-			// return 1 - empty cell
-			return 1, tryCoord.x, tryCoord.y
-		}
-		if board[x][y].species == SHARK && board[tryCoord.x][tryCoord.y].species == FISH {
-			// return 2 - fish available
-			return 2, tryCoord.x, tryCoord.y
+		if tryCoord.x != x || tryCoord.y != y {
+			if board[tryCoord.x][tryCoord.y] == nil {
+				// return 1 - empty cell
+				return 1, tryCoord.x, tryCoord.y
+			}
+			if board[x][y].species == SHARK && board[tryCoord.x][tryCoord.y].species == FISH {
+				// return 2 - fish available
+				return 2, tryCoord.x, tryCoord.y
+			}
 		}
 	}
 	return 0, 0, 0
