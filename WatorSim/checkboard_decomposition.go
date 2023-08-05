@@ -63,7 +63,7 @@ func checkboardPartition() ([]submatrix, []submatrix) {
 	return evenPartitions, oddPartitions
 }
 
-func tickCheckboard(submatrixChan chan submatrix, board [][]*creature) {
+func tickCheckboard(submatrixChan chan submatrix, board *[][]*creature) {
 	defer waitGroup.Done()
 
 	for submatrix := range submatrixChan {
@@ -75,7 +75,7 @@ func tickCheckboard(submatrixChan chan submatrix, board [][]*creature) {
 	}
 }
 
-func runHalf(board [][]*creature, partitions []submatrix) {
+func runHalf(board *[][]*creature, partitions []submatrix) {
 	submatrixChan := make(chan submatrix, ThreadCount)
 
 	for i := 0; i < ThreadCount; i++ {
@@ -92,7 +92,7 @@ func runHalf(board [][]*creature, partitions []submatrix) {
 	waitGroup.Wait()
 }
 
-func runCheckboard(board [][]*creature) {
+func runCheckboard(board *[][]*creature) {
 	evenPartitions, oddPartitions := checkboardPartition()
 	var images []*image.Paletted
 
@@ -107,5 +107,5 @@ func runCheckboard(board [][]*creature) {
 
 func CreateAndRunCheckboard() {
 	board := initBoard()
-	runCheckboard(board)
+	runCheckboard(&board)
 }

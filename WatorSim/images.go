@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func createImage(board [][]*creature) *image.Paletted {
+func createImage(board *[][]*creature) *image.Paletted {
 	img := image.NewPaletted(
 		image.Rect(0, 0, Width, Height),
 		color.Palette{waterColor, fishColor, sharkColor},
@@ -15,10 +15,10 @@ func createImage(board [][]*creature) *image.Paletted {
 
 	for i := 0; i < Width; i++ {
 		for j := 0; j < Height; j++ {
-			if board[i][j] == nil {
+			if (*board)[i][j] == nil {
 				img.Set(i, j, waterColor)
 			} else {
-				switch board[i][j].species {
+				switch (*board)[i][j].species {
 				case FISH:
 					img.Set(i, j, fishColor)
 				case SHARK:
@@ -31,7 +31,7 @@ func createImage(board [][]*creature) *image.Paletted {
 	return img
 }
 
-func tickImage(images []*image.Paletted, board [][]*creature) []*image.Paletted {
+func tickImage(images []*image.Paletted, board *[][]*creature) []*image.Paletted {
 	img := createImage(board)
 	images = append(images, img)
 	return images

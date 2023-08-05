@@ -30,7 +30,7 @@ func adjacent(x, y, direction int) coordinate {
 	}
 }
 
-func findEmptyAdjacent(board [][]*creature, x, y int) (int, int, int) {
+func findEmptyAdjacent(board *[][]*creature, x, y int) (int, int, int) {
 	adjacentCoords := []coordinate{
 		adjacent(x, y, NORTH),
 		adjacent(x, y, SOUTH),
@@ -47,11 +47,11 @@ func findEmptyAdjacent(board [][]*creature, x, y int) (int, int, int) {
 
 	for _, tryCoord := range adjacentCoords {
 		if tryCoord.x != x || tryCoord.y != y {
-			if board[tryCoord.x][tryCoord.y] == nil {
+			if (*board)[tryCoord.x][tryCoord.y] == nil {
 				// return 1 - empty cell
 				return 1, tryCoord.x, tryCoord.y
 			}
-			if board[x][y].species == SHARK && board[tryCoord.x][tryCoord.y].species == FISH {
+			if (*board)[x][y].species == SHARK && (*board)[tryCoord.x][tryCoord.y].species == FISH {
 				// return 2 - fish available
 				return 2, tryCoord.x, tryCoord.y
 			}
@@ -60,15 +60,15 @@ func findEmptyAdjacent(board [][]*creature, x, y int) (int, int, int) {
 	return 0, 0, 0
 }
 
-func tickAnimal(board [][]*creature, x int, y int) {
-	if board[x][y] == nil {
+func tickAnimal(board *[][]*creature, x int, y int) {
+	if (*board)[x][y] == nil {
 		return
 	}
 
-	board[x][y].age++
-	board[x][y].starve--
-	if board[x][y].starve <= 0 {
-		board[x][y] = nil
+	(*board)[x][y].age++
+	(*board)[x][y].starve--
+	if (*board)[x][y].starve <= 0 {
+		(*board)[x][y] = nil
 		return
 	}
 
@@ -78,23 +78,23 @@ func tickAnimal(board [][]*creature, x int, y int) {
 		return
 	}
 
-	board[newX][newY] = board[x][y]
+	(*board)[newX][newY] = (*board)[x][y]
 
-	if board[newX][newY].species == FISH {
-		if board[newX][newY].age == BreedFish {
-			board[x][y] = createFish()
+	if (*board)[newX][newY].species == FISH {
+		if (*board)[newX][newY].age == BreedFish {
+			(*board)[x][y] = createFish()
 		} else {
-			board[x][y] = nil
+			(*board)[x][y] = nil
 		}
 	} else { // the creature is a shark
-		if board[newX][newY].age == BreedSharks {
-			board[x][y] = createShark()
+		if (*board)[newX][newY].age == BreedSharks {
+			(*board)[x][y] = createShark()
 		} else {
-			board[x][y] = nil
+			(*board)[x][y] = nil
 		}
 	}
 
 	if status == 2 {
-		board[newX][newY].starve = Starve
+		(*board)[newX][newY].starve = Starve
 	}
 }
