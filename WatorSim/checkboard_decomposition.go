@@ -1,12 +1,9 @@
 package WatorSim
 
 import (
-	"image"
 	"math"
 	"sync"
 )
-
-var waitGroup sync.WaitGroup
 
 func checkboardPartition() ([]submatrix, []submatrix) {
 	partitionCount := int(math.Sqrt(float64(2 * ThreadCount)))
@@ -63,12 +60,12 @@ func checkboardPartition() ([]submatrix, []submatrix) {
 	return evenPartitions, oddPartitions
 }
 
-func tickCheckboard(submatrixChan chan submatrix, board *[][]*creature) {
+func tickCheckboard(submatrixChan chan submatrix, board *[][]*creature, waitGroup *sync.WaitGroup) {
 	defer waitGroup.Done()
 
 	for submatrix := range submatrixChan {
-		for x := submatrix.fromX; x <= submatrix.toX; x++ {
-			for y := submatrix.fromY; y <= submatrix.toY; y++ {
+		for y := submatrix.fromY; y <= submatrix.toY; y++ {
+			for x := submatrix.fromX; x <= submatrix.toX; x++ {
 				tickAnimal(board, x, y)
 			}
 		}
@@ -77,10 +74,11 @@ func tickCheckboard(submatrixChan chan submatrix, board *[][]*creature) {
 
 func runHalf(board *[][]*creature, partitions []submatrix) {
 	submatrixChan := make(chan submatrix, ThreadCount)
+	waitGroup := sync.WaitGroup{}
 
 	for i := 0; i < ThreadCount; i++ {
 		waitGroup.Add(1)
-		go tickCheckboard(submatrixChan, board)
+		go tickCheckboard(submatrixChan, board, &waitGroup)
 	}
 
 	for _, item := range partitions {
@@ -94,15 +92,15 @@ func runHalf(board *[][]*creature, partitions []submatrix) {
 
 func runCheckboard(board *[][]*creature) {
 	evenPartitions, oddPartitions := checkboardPartition()
-	var images []*image.Paletted
+	//var images []*image.Paletted
 
 	for i := 0; i < MaxChronon; i++ {
 		runHalf(board, evenPartitions)
 		runHalf(board, oddPartitions)
-		images = tickImage(images, board)
+		//images = tickImage(images, board)
 	}
 
-	createAnimation(images, "image.gif")
+	//createAnimation(images, "image.gif")
 }
 
 func CreateAndRunCheckboard() {
