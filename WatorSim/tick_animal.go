@@ -47,11 +47,11 @@ func findEmptyAdjacent(board *[][]*creature, x, y int) (int, int, int) {
 
 	for _, tryCoord := range adjacentCoords {
 		if tryCoord.x != x || tryCoord.y != y {
-			if (*board)[tryCoord.x][tryCoord.y] == nil {
+			if (*board)[tryCoord.y][tryCoord.x] == nil {
 				// return 1 - empty cell
 				return 1, tryCoord.x, tryCoord.y
 			}
-			if (*board)[x][y].species == SHARK && (*board)[tryCoord.x][tryCoord.y].species == FISH {
+			if (*board)[y][x].species == SHARK && (*board)[tryCoord.y][tryCoord.x].species == FISH {
 				// return 2 - fish available
 				return 2, tryCoord.x, tryCoord.y
 			}
@@ -61,14 +61,14 @@ func findEmptyAdjacent(board *[][]*creature, x, y int) (int, int, int) {
 }
 
 func tickAnimal(board *[][]*creature, x int, y int) {
-	if (*board)[x][y] == nil {
+	if (*board)[y][x] == nil {
 		return
 	}
 
-	(*board)[x][y].age++
-	(*board)[x][y].starve--
-	if (*board)[x][y].starve <= 0 {
-		(*board)[x][y] = nil
+	(*board)[y][x].age++
+	(*board)[y][x].starve--
+	if (*board)[y][x].starve <= 0 {
+		(*board)[y][x] = nil
 		return
 	}
 
@@ -78,23 +78,23 @@ func tickAnimal(board *[][]*creature, x int, y int) {
 		return
 	}
 
-	(*board)[newX][newY] = (*board)[x][y]
+	(*board)[newY][newX] = (*board)[y][x]
 
-	if (*board)[newX][newY].species == FISH {
-		if (*board)[newX][newY].age == BreedFish {
-			(*board)[x][y] = createFish()
+	if (*board)[newY][newX].species == FISH {
+		if (*board)[newY][newX].age == BreedFish {
+			(*board)[y][x] = createFish()
 		} else {
-			(*board)[x][y] = nil
+			(*board)[y][x] = nil
 		}
 	} else { // the creature is a shark
-		if (*board)[newX][newY].age == BreedSharks {
-			(*board)[x][y] = createShark()
+		if (*board)[newY][newX].age == BreedSharks {
+			(*board)[y][x] = createShark()
 		} else {
-			(*board)[x][y] = nil
+			(*board)[y][x] = nil
 		}
 	}
 
 	if status == 2 {
-		(*board)[newX][newY].starve = Starve
+		(*board)[newY][newX].starve = Starve
 	}
 }

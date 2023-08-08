@@ -6,9 +6,9 @@ import (
 )
 
 func initBoard() [][]*creature {
-	var board = make([][]*creature, Width)
+	var board = make([][]*creature, Height)
 	for i := range board {
-		board[i] = make([]*creature, Height)
+		board[i] = make([]*creature, Width)
 	}
 
 	// create a new pseudorandom number generator
@@ -20,12 +20,12 @@ func initBoard() [][]*creature {
 			x = prng.Intn(Width - 1)
 			y = prng.Intn(Height - 1)
 
-			if board[x][y] == nil {
+			if board[y][x] == nil {
 				break
 			}
 		}
 
-		board[x][y] = createFish()
+		board[y][x] = createFish()
 	}
 
 	for i := 0; i < InitSharksCount; i++ {
@@ -34,12 +34,12 @@ func initBoard() [][]*creature {
 			x = prng.Intn(Width - 1)
 			y = prng.Intn(Height - 1)
 
-			if board[x][y] == nil {
+			if board[y][x] == nil {
 				break
 			}
 		}
 
-		board[x][y] = createShark()
+		board[y][x] = createShark()
 	}
 
 	return board
