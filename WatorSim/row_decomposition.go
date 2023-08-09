@@ -1,7 +1,6 @@
 package WatorSim
 
 import (
-	"image"
 	"sync"
 )
 
@@ -34,7 +33,7 @@ func rowPartition() []submatrix {
 	return partitions
 }
 
-func tickRow(submatrixChan chan submatrix, board *[][]*creature, waitGroup *sync.WaitGroup, mutex *sync.Mutex) {
+func tickRow(submatrixChan chan submatrix, board [][]*creature, waitGroup *sync.WaitGroup, mutex *sync.Mutex) {
 	defer waitGroup.Done()
 
 	for submatrix := range submatrixChan {
@@ -52,7 +51,7 @@ func tickRow(submatrixChan chan submatrix, board *[][]*creature, waitGroup *sync
 	}
 }
 
-func runRows(board *[][]*creature, partitions []submatrix) {
+func runRows(board [][]*creature, partitions []submatrix) {
 	submatrixChan := make(chan submatrix, ThreadCount)
 	waitGroup := sync.WaitGroup{}
 	mutex := sync.Mutex{}
@@ -71,19 +70,19 @@ func runRows(board *[][]*creature, partitions []submatrix) {
 	waitGroup.Wait()
 }
 
-func runRow(board *[][]*creature) {
+func runRow(board [][]*creature) {
 	partitions := rowPartition()
-	var images []*image.Paletted
+	//var images []*image.Paletted
 
 	for i := 0; i < MaxChronon; i++ {
 		runRows(board, partitions)
-		images = tickImage(images, board)
+		//images = tickImage(images, board)
 	}
 
-	createAnimation(images, "image.gif")
+	//createAnimation(images, "image.gif")
 }
 
 func CreateAndRunRow() {
 	board := initBoard()
-	runRow(&board)
+	runRow(board)
 }
